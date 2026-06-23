@@ -3,63 +3,56 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\GradingPackage;
 use Illuminate\Http\Request;
 
 class GradingPackageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $packages = GradingPackage::latest()->get();
+        return view('admin.grading-packages.index', compact('packages'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.grading-packages.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'package_name' => 'required|string|unique:grading_packages,package_name',
+            'price' => 'required|numeric|min:0',
+            'estimated_days' => 'required|integer|min:1',
+        ]);
+
+        GradingPackage::create($validated);
+        return redirect()->route('admin.grading-packages.index')->with('success', 'Paket grading berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(GradingPackage $gradingPackage) { abort(404); }
+
+    public function edit(GradingPackage $gradingPackage)
     {
-        //
+        return view('admin.grading-packages.edit', compact('gradingPackage'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, GradingPackage $gradingPackage)
     {
-        //
+        $validated = $request->validate([
+            'package_name' => 'required|string|unique:grading_packages,package_name,' . $gradingPackage->id,
+            'price' => 'required|numeric|min:0',
+            'estimated_days' => 'required|integer|min:1',
+        ]);
+
+        $gradingPackage->update($validated);
+        return redirect()->route('admin.grading-packages.index')->with('success', 'Paket grading berhasil diperbarui!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(GradingPackage $gradingPackage)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $gradingPackage->delete();
+        return redirect()->route('admin.grading-packages.index')->with('success', 'Paket grading berhasil dihapus!');
     }
 }

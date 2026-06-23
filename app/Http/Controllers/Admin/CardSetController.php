@@ -3,63 +3,64 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CardSet;
 use Illuminate\Http\Request;
 
 class CardSetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $cardSets = CardSet::latest()->get();
+        return view('admin.card-sets.index', compact('cardSets'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.card-sets.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'set_code' => 'required|string|unique:card_sets,set_code',
+            'set_name' => 'required|string',
+            'release_year' => 'required|digits:4|integer',
+            'total_cards' => 'required|integer|min:1',
+        ]);
+
+        CardSet::create($validated);
+
+        return redirect()->route('admin.card-sets.index')->with('success', 'Set kartu berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(CardSet $cardSet)
     {
-        //
+        abort(404);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(CardSet $cardSet)
     {
-        //
+        return view('admin.card-sets.edit', compact('cardSet'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, CardSet $cardSet)
     {
-        //
+        $validated = $request->validate([
+            'set_code' => 'required|string|unique:card_sets,set_code,' . $cardSet->id,
+            'set_name' => 'required|string',
+            'release_year' => 'required|digits:4|integer',
+            'total_cards' => 'required|integer|min:1',
+        ]);
+
+        $cardSet->update($validated);
+
+        return redirect()->route('admin.card-sets.index')->with('success', 'Set kartu berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(CardSet $cardSet)
     {
-        //
+        $cardSet->delete();
+
+        return redirect()->route('admin.card-sets.index')->with('success', 'Set kartu berhasil dihapus!');
     }
 }
