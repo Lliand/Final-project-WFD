@@ -42,17 +42,29 @@
                             <span class="flex-1 ms-3 whitespace-nowrap">Master Packages</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('admin.users.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('admin.users.*') ? 'bg-gray-100 dark:bg-gray-700 text-white border-l-4 border-green-500' : '' }}">
+                            <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-green-500 dark:group-hover:text-green-500 {{ request()->routeIs('admin.users.*') ? 'text-green-500 dark:text-green-500' : '' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9h4a5 5 0 0 1 5 5v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2a5 5 0 0 1 5-5Z"/></svg>
+                            <span class="flex-1 ms-3 whitespace-nowrap">User Management</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.grading_audit.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('admin.grading_audit.index') ? 'bg-gray-100 dark:bg-gray-700 text-white border-l-4 border-green-500' : '' }}">
+                            <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-green-500 dark:group-hover:text-green-500 {{ request()->routeIs('admin.grading_audit.index') ? 'text-green-500 dark:text-green-500' : '' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v13m0-13c-2.819-.831-4.715-1-7-1v14c2.285 0 4.181.169 7 1m0-14c2.819-.831 4.715-1 7-1v14c-2.285 0-4.181.169-7 1"/></svg>
+                            <span class="flex-1 ms-3 whitespace-nowrap">Grading Audit</span>
+                        </a>
+                    </li>
 
                 @elseif(Auth::check() && Auth::user()->role === 'Staff')
                     <li class="px-3 py-3">
                         <div class="bg-orange-800 text-white text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-lg text-center shadow-md shadow-orange-900/30 border border-orange-600">
-                            Staff Panel
+                            Staff
                         </div>
                     </li>
                     <li>
                         <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 group">
                             <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-orange-500 dark:group-hover:text-orange-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5v14m-6-8h18"/></svg>
-                            <span class="flex-1 ms-3 whitespace-nowrap">Pick-up Queue</span>
+                            <span class="flex-1 ms-3 whitespace-nowrap">Grading Requests</span>
                         </a>
                     </li>
 

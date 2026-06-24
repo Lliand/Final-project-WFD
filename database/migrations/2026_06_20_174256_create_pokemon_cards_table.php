@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('raw_image_url');
             $table->string('graded_image_url')->nullable();
             $table->integer('hall_of_fame_slot')->nullable();
-            $table->enum('status', ['Raw_Pending', 'In_Grading', 'Graded_Inventory', 'Rejected'])->default('Raw_Pending');
+            $table->enum('status', ['Raw_Collection', 'Raw_Pending', 'In_Grading', 'Graded_Inventory', 'Rejected'])->default('Raw_Collection');
+            $table->string('grade')->nullable();
             $table->timestamps();
         });
     }

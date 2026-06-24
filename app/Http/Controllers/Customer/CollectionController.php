@@ -27,7 +27,8 @@ class CollectionController extends Controller
         if ($filterElement) $query->where('element_type', $filterElement);
         if ($filterSet) $query->where('set_id', $filterSet);
 
-        $sortColumn = $sortBy == 'date_obtained' ? 'created_at' : ($sortBy == 'price' ? 'id' : 'final_grade');
+        
+        $sortColumn = $sortBy == 'date_obtained' ? 'created_at' : ($sortBy == 'price' ? 'id' : 'grade');
         $data = $query->orderBy($sortColumn, $sortMode)->get();
 
         $availableSets = CardSet::all();
@@ -47,7 +48,7 @@ class CollectionController extends Controller
             'card_name' => 'required|string',
             'set_id' => 'required|exists:card_sets,id',
             'card_type' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048', 
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $imagePath = $request->file('image')->store('cards', 'public');
@@ -60,12 +61,11 @@ class CollectionController extends Controller
             'element_type' => $request->element_type,
             'raw_image_url' => $imagePath,
             'hall_of_fame_slot' => $request->hall_of_fame_slot,
-            'status' => 'Raw_Pending',
-            'final_grade' => $request->grade,
-            'description' => $request->description,
+            'status' => 'Raw_Collection', 
+            'grade' => null,
         ]);
 
-        return redirect()->route('collection.index')->with('success', 'Kartu berhasil ditambahkan dan siap untuk di-grade!');
+        return redirect()->route('collection.index')->with('success', 'Kartu berhasil ditambahkan ke Vault!');
     }
 
     public function edit($id)
@@ -92,8 +92,6 @@ class CollectionController extends Controller
             'card_type' => $request->card_type,
             'element_type' => $request->element_type,
             'hall_of_fame_slot' => $request->hall_of_fame_slot,
-            'description' => $request->description,
-            'final_grade' => $request->grade,
         ];
 
         if ($request->hasFile('image')) {
@@ -112,7 +110,6 @@ class CollectionController extends Controller
     {
         $card = PokemonCard::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         
-        // Hapus file gambar fisiknya
         if ($card->raw_image_url && !str_starts_with($card->raw_image_url, 'http')) {
             Storage::disk('public')->delete($card->raw_image_url);
         }

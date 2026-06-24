@@ -76,9 +76,8 @@
                 <div class="flex space-x-2">
                     
                     <select name="sortBy" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        <option value="date_obtained" {{ $sortBy == 'date_obtained' ? 'selected' : '' }}>Date Obtained</option>
-                        <option value="price" {{ $sortBy == 'price' ? 'selected' : '' }}>Market Price</option>
-                        <option value="grade" {{ $sortBy == 'grade' ? 'selected' : '' }}>PSA Grade</option>
+        
+                        <option value="grade" {{ $sortBy == 'grade' ? 'selected' : '' }}>Grade</option>
                     </select>
 
                     <select name="sortMode" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -128,24 +127,23 @@
                         </div>
                         
                         <div class="flex justify-between items-center mt-3 pt-2 border-t border-gray-700/40 text-[12px]">
-                            <div class="flex flex-col">
-                                <span class="text-[9px] text-gray-500 uppercase tracking-widest mb-0.5">Grade</span>
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-white text-xs">
-                                        @if($item->final_grade != null)
-                                            <span class="text-yellow-500">★</span> {{ $item->final_grade }}
-                                        @else
-                                            <span class="text-gray-400 text-[9px] font-bold tracking-widest uppercase">Ungraded</span>
-                                        @endif
+                            
+                            @if($item->status === 'Graded_Inventory' && $item->grade != null)
+                                <div class="flex items-center gap-1.5">
+                                    <span class="bg-gradient-to-r from-yellow-500 to-yellow-600 px-2 py-0.5 rounded text-gray-950 font-black shadow-sm tracking-wide text-[9px]">
+                                        Grade: {{ $item->grade }}
                                     </span>
-                                    
-                                    @if($item->status === 'Graded_Inventory')
-                                        <span class="bg-blue-900/50 text-blue-400 border border-blue-700 text-[8px] font-black uppercase px-1.5 py-0.5 rounded shadow-sm">
-                                            ✓ PV Approved
-                                        </span>
-                                    @endif
+                                    <span class="bg-blue-950/80 text-blue-400 border border-blue-800/60 text-[8px] font-black uppercase px-1.5 py-0.5 rounded shadow-inner">
+                                        ✓ PV Approved
+                                    </span>
                                 </div>
-                            </div>
+                            @else
+                                <span class="text-gray-400 font-medium text-[11px]">{{ $item->card_type }}</span>
+                            @endif
+
+                            <span class="text-gray-500 text-[11px]">
+                                {{ $item->element_type ?? 'Normal' }}
+                            </span>
                         </div>
                     </div>
 

@@ -119,11 +119,6 @@
                     <p class="mt-2 text-xs text-gray-400">Biarkan kosong jika Anda tidak ingin mengubah gambar saat ini.</p>
                 </div>
 
-                <div class="mb-8">
-                    <label class="block mb-2 text-sm font-medium text-white">Description / Notes</label>
-                    <textarea name="description" rows="3" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">{{ old('description', $card->description) }}</textarea>
-                </div>
-
                 <div class="flex justify-end pt-5 border-t border-gray-700">
                     <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-8 py-2.5 shadow-lg shadow-blue-900/50 transition-colors">
                         Update Data Kartu

@@ -25,7 +25,7 @@
         <div class="grid grid-cols-1 gap-6 mb-8">
             <div>
                 <label class="block mb-2 text-sm font-medium text-white">Nama Paket <span class="text-red-500">*</span></label>
-                <input type="text" name="package_name" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Contoh: Express White-Glove (3 Days)" required>
+                <input type="text" name="package_name" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Contoh: Express Grading" required>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

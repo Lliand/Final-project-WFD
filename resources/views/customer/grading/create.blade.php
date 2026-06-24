@@ -1,16 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-5xl mx-auto py-8">
-    <div class="mb-8 border-b border-gray-700 pb-5">
-        <h2 class="text-3xl font-extrabold text-white">Submit Grading Request</h2>
-        <p class="text-gray-400 text-sm mt-2">Mulai proses White-Glove untuk kartu koleksimu. Tim kami akan menjemput kartumu dengan aman.</p>
+<div class="max-w-3xl mx-auto py-8">
+    <div class="mb-6">
+        <h1 class="text-3xl font-extrabold text-white tracking-wide">Submit Grading Request</h1>
+        <p class="text-sm text-gray-400 mt-1">Pilih kartu dari brankas, tentukan paket, dan atur penjemputan logistik White-Glove kami.</p>
     </div>
 
     @if ($errors->any())
-        <div class="p-4 mb-6 text-sm text-red-400 rounded-lg bg-gray-800 border border-red-800" role="alert">
-            <span class="font-bold">Periksa kembali input Anda:</span>
-            <ul class="list-disc pl-5 mt-2">
+        <div class="p-4 mb-6 text-sm text-red-400 rounded-lg bg-gray-800 border border-red-800">
+            <ul class="list-disc pl-5">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -18,66 +17,49 @@
         </div>
     @endif
 
-    @if($cards->isEmpty())
-        <div class="p-8 text-center bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
-            <h3 class="text-xl font-bold text-white mb-2">Tidak Ada Kartu Raw</h3>
-            <p class="text-gray-400 mb-6">Kamu belum menambahkan kartu ke dalam vault, atau semua kartumu sedang/sudah di-grade.</p>
-            <a href="{{ route('collection.create') }}" class="inline-flex items-center text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">
-                + Tambah Kartu Baru
-            </a>
+    <form action="{{ route('grading.request.store') }}" method="POST" class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-md">
+        @csrf
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- PILIH KARTU -->
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-300">Pilih Kartu <span class="text-red-500">*</span></label>
+                <select name="card_id" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <option value="">-- Pilih Kartu --</option>
+                    @foreach($cards as $card)
+                        <option value="{{ $card->id }}">{{ $card->card_name }} ({{ $card->card_type }})</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- PILIH PAKET -->
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-300">Paket Layanan <span class="text-red-500">*</span></label>
+                <select name="package_id" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <option value="">-- Pilih Paket Grading --</option>
+                    @foreach($packages as $pkg)
+                        <option value="{{ $pkg->id }}">{{ $pkg->package_name }} - Rp {{ number_format($pkg->price, 0, ',', '.') }} - {{ $pkg->estimated_days }} hari</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
-    @else
-        <form action="{{ route('grading.request.store') }}" method="POST" class="bg-gray-800 p-8 rounded-2xl border border-gray-700 shadow-xl">
-            @csrf
 
-            <h3 class="text-xl font-bold text-yellow-500 border-b border-gray-700 pb-2 mb-6">1. Pilih Kartu & Layanan</h3>
+        <div class="mb-6">
+            <label class="block mb-2 text-sm font-medium text-gray-300">Alamat Penjemputan (Pickup Address) <span class="text-red-500">*</span></label>
+            <textarea name="pickup_address" rows="2" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan alamat lengkap untuk kurir menjemput kartu mentah Anda..." required></textarea>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-white">Pilih Kartu dari Vault <span class="text-red-500">*</span></label>
-                    <select name="card_id" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" required>
-                        <option value="">-- Pilih Kartu --</option>
-                        @foreach($cards as $card)
-                            <option value="{{ $card->id }}">{{ $card->card_name }} ({{ $card->cardSet->set_name ?? 'Unknown Set' }})</option>
-                        @endforeach
-                    </select>
-                </div>
+        <div class="mb-6">
+            <label class="block mb-2 text-sm font-medium text-gray-300">Alamat Pengembalian (Return Address) <span class="text-red-500">*</span></label>
+            <textarea name="return_address" rows="2" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan alamat lengkap untuk mengirimkan kembali kartu yang sudah di-slab..." required></textarea>
+        </div>
 
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-white">Paket White-Glove Grading <span class="text-red-500">*</span></label>
-                    <select name="package_id" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" required>
-                        <option value="">-- Pilih Paket --</option>
-                        @foreach($packages as $pkg)
-                            <option value="{{ $pkg->id }}">{{ $pkg->package_name }} - Rp{{ number_format($pkg->price, 0, ',', '.') }} (Estimasi {{ $pkg->estimated_days }} Hari)</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-            <h3 class="text-xl font-bold text-yellow-500 border-b border-gray-700 pb-2 mb-6">2. Informasi Logistik White-Glove</h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-white">Alamat Penjemputan (Pick-up) <span class="text-red-500">*</span></label>
-                    <textarea name="pickup_address" rows="3" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="Alamat lengkap lokasi penjemputan kartu oleh staf kami..." required>{{ Auth::user()->default_address }}</textarea>
-                    <p class="mt-1 text-xs text-gray-400">Pastikan alamat jelas agar staf dapat menemukan lokasi Anda.</p>
-                </div>
-
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-white">Alamat Pengembalian (Return) <span class="text-red-500">*</span></label>
-                    <textarea name="return_address" rows="3" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="Alamat pengiriman kembali setelah kartu selesai di-grade..." required>{{ Auth::user()->default_address }}</textarea>
-                </div>
-            </div>
-
-            <div class="flex items-center justify-end space-x-4 border-t border-gray-700 pt-6">
-                <a href="{{ route('collection.index') }}" class="text-gray-400 bg-transparent hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">
-                    Batal
-                </a>
-                <button type="submit" class="text-gray-950 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-800 font-bold rounded-lg text-sm px-8 py-3 text-center transition-all shadow-lg shadow-yellow-900/40">
-                    Submit Transaksi
-                </button>
-            </div>
-        </form>
-    @endif
+        <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-700">
+            <a href="{{ route('collection.index') }}" class="text-gray-400 hover:text-white text-sm font-medium px-4 py-2 transition-colors">Batal</a>
+            <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-sm transition-colors shadow">
+                Buat Tiket Grading
+            </button>
+        </div>
+    </form>
 </div>
 @endsection

@@ -6,8 +6,13 @@ use App\Http\Controllers\Admin\CardSetController;
 use App\Http\Controllers\Admin\GradingPackageController;
 use App\Http\Controllers\Customer\CollectionController;
 use App\Http\Controllers\Customer\HallOfFameController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\AuditController;
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
     return view('welcome');
 });
 
@@ -16,7 +21,7 @@ Route::get('/dashboard', function () {
         return redirect()->route('admin.card-sets.index');
     } 
     elseif (Auth::user()->role === 'Staff') {
-        return redirect('/'); 
+        return redirect()->route('staff.dashboard');
     } 
     else {
         return redirect()->route('halloffame.index');
@@ -32,16 +37,8 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
 
     Route::resource('card-sets', CardSetController::class);
     Route::resource('grading-packages', GradingPackageController::class);
-    
-});
-
-Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard'); 
-    })->name('dashboard');
-
-    Route::resource('card-sets', CardSetController::class);
-    Route::resource('grading-packages', GradingPackageController::class); // Pastikan baris ini aktif
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::get('/admin/grading-audit', [AuditController::class, 'index'])->name('admin.grading_audit.index');
 });
 
 // Rute untuk Customer (Harus Login)
@@ -64,6 +61,18 @@ Route::get('/grading/request', [App\Http\Controllers\Customer\GradingRequestCont
 Route::post('/grading/request', [App\Http\Controllers\Customer\GradingRequestController::class, 'store'])->name('grading.request.store');
 Route::get('/grading/history', [App\Http\Controllers\Customer\GradingRequestController::class, 'index'])->name('grading.history');
 
+// Staff
+Route::middleware(['auth', 'role:Staff'])->prefix('staff')->name('staff.')->group(function () {
+    
+    Route::get('/dashboard', function () {
+        return view('staff.dashboard');
+    })->name('dashboard');
+
+    Route::get('/dashboard', [App\Http\Controllers\Staff\StaffDashboardController::class, 'index'])->name('dashboard');
+    Route::put('/request/{id}/pickup', [App\Http\Controllers\Staff\StaffDashboardController::class, 'pickup'])->name('request.pickup');
+    Route::put('/request/{id}/lab-submit', [App\Http\Controllers\Staff\StaffDashboardController::class, 'submitLabGrading'])->name('request.lab-submit');
+    Route::put('/request/{id}/dropoff', [App\Http\Controllers\Staff\StaffDashboardController::class, 'dropoff'])->name('request.dropoff');    
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

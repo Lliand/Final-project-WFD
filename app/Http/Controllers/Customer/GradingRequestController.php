@@ -25,7 +25,7 @@ class GradingRequestController extends Controller
     public function create()
     {
         $cards = PokemonCard::where('user_id', Auth::id())
-            ->where('status', 'Raw_Pending')
+            ->where('status', 'Raw_Collection')
             ->get();
             
         $packages = GradingPackage::all();
@@ -44,12 +44,15 @@ class GradingRequestController extends Controller
 
         $card = PokemonCard::where('id', $request->card_id)
             ->where('user_id', Auth::id())
-            ->where('status', 'Raw_Pending')
+            ->where('status', 'Raw_Collection')
             ->firstOrFail();
+
+        $card->update([
+            'status' => 'Raw_Pending'
+        ]);
 
         $package = GradingPackage::findOrFail($request->package_id);
 
-        // Buat nomor tiket
         $ticketNumber = 'REQ-' . strtoupper(Str::random(8));
 
         GradingRequest::create([
@@ -63,8 +66,6 @@ class GradingRequestController extends Controller
             'logistics_status' => 'Waiting_For_Pickup',
         ]);
 
-        $card->update(['status' => 'In_Grading']);
-
-        return redirect()->route('customer.grading.history')->with('success', "Permintaan grading {$ticketNumber} berhasil dibuat! Tim White-Glove kami akan segera meluncur.");
+        return redirect()->route('grading.history')->with('success', "Permintaan grading {$ticketNumber} berhasil dibuat! Tim kami akan segera menuju alamat Anda.");
     }
 }
