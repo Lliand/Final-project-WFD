@@ -49,8 +49,10 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.grading_audit.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('admin.grading_audit.index') ? 'bg-gray-100 dark:bg-gray-700 text-white border-l-4 border-green-500' : '' }}">
-                            <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-green-500 dark:group-hover:text-green-500 {{ request()->routeIs('admin.grading_audit.index') ? 'text-green-500 dark:text-green-500' : '' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v13m0-13c-2.819-.831-4.715-1-7-1v14c2.285 0 4.181.169 7 1m0-14c2.819-.831 4.715-1 7-1v14c-2.285 0-4.181.169-7 1"/></svg>
+                        <a href="{{ route('admin.audit-trail') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('admin.audit-trail') ? 'bg-gray-100 dark:bg-gray-700 text-white border-l-4 border-green-500' : '' }}">
+                            <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-green-500 dark:group-hover:text-green-500 {{ request()->routeIs('admin.audit-trail') ? 'text-green-500 dark:text-green-500' : '' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
                             <span class="flex-1 ms-3 whitespace-nowrap">Grading Audit</span>
                         </a>
                     </li>

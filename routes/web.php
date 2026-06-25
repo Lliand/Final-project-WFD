@@ -13,7 +13,7 @@ Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('dashboard');
     }
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
@@ -30,16 +30,10 @@ Route::get('/dashboard', function () {
 
 // Rute khusus Admin
 Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
-    
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
-
     Route::resource('card-sets', CardSetController::class);
     Route::resource('grading-packages', GradingPackageController::class);
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
-    Route::get('/admin/grading-audit', [AuditController::class, 'index'])->name('admin.grading_audit.index');
-});
+    Route::get('/admin/audit-trail', [App\Http\Controllers\Admin\AuditController::class, 'index'])->name('audit-trail');});
 
 // Rute untuk Customer (Harus Login)
 Route::middleware(['auth'])->group(function () {
@@ -54,7 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/collection/edit/{id}', [CollectionController::class, 'edit'])->name('collection.edit');
     Route::put('/collection/update/{id}', [CollectionController::class, 'update'])->name('collection.update');
     Route::delete('/collection/destroy/{id}', [CollectionController::class, 'destroy'])->name('collection.destroy');
-
+    Route::post('/collection/update-hof', [App\Http\Controllers\Customer\CollectionController::class, 'updateHofSlot'])->name('collection.update-hof');
 });
 
 Route::get('/grading/request', [App\Http\Controllers\Customer\GradingRequestController::class, 'create'])->name('grading.request.create');

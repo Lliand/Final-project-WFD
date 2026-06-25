@@ -71,7 +71,7 @@
                                 @elseif($req->pokemonCard->status === 'In_Grading')
                                     <span class="text-blue-400 font-medium">Sedang Dalam Proses Grading</span>
                                 @elseif($req->pokemonCard->status === 'Graded_Inventory')
-                                    <span class="text-green-400 font-bold">✓ PSA {{ $req->pokemonCard->grade }} (Selesai)</span>
+                                    <span class="text-green-400 font-bold">✓ Grade {{ $req->pokemonCard->grade }}</span>
                                 @else
                                     <span class="text-gray-400">{{ $req->pokemonCard->status }}</span>
                                 @endif

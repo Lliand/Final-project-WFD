@@ -83,7 +83,7 @@ class StaffDashboardController extends Controller
             $req->pokemonCard->update([
                 'grade' => $request->final_grade,
                 'graded_image_url' => $imagePath,
-                'status' => 'In_Grading' 
+                'status' => 'Graded_Inventory' 
             ]);
         }
 
